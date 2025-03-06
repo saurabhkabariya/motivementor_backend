@@ -1,18 +1,30 @@
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
+const fetch = require("node-fetch");
 
 const app = express();
-app.use(cors()); // Enable CORS for frontend access
+const PORT = process.env.PORT || 3001;
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// API Route
 app.get("/quote", async (req, res) => {
   try {
-    const response = await axios.get("https://api.quotable.io/random");
-    res.json(response.data);
+    const response = await fetch("https://api.quotable.io/random");
+    
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    res.json(data);
   } catch (error) {
+    console.error("Error fetching quote:", error.message);
     res.status(500).json({ error: "Failed to fetch quote" });
   }
 });
 
-const PORT = 3001;
-app.listen(PORT, () => console.log(`Proxy server running on port ${PORT}`));
+// Start Server
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
