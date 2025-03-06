@@ -1,6 +1,6 @@
-const express = require("express");
-const cors = require("cors");
-const fetch = require("node-fetch");
+import express from "express";
+import cors from "cors";
+import fetch from "node-fetch";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,7 +13,7 @@ app.use(express.json());
 app.get("/quote", async (req, res) => {
   try {
     const response = await fetch("https://api.quotable.io/random");
-    
+
     if (!response.ok) {
       throw new Error(`API Error: ${response.statusText}`);
     }
